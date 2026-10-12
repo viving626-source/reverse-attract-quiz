@@ -330,9 +330,8 @@ body::after{
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 /* ===== 配置 ===== */
-var PASSWORD_POOL = ["888888"];              // 体验密码池：可添加多个密码
-var MAX_PER_PWD   = 3;                       // 每个密码限测次数
-var STORE_KEY     = "reverse_attract_quota";
+var SUPABASE_URL  = "https://qczgmhtfxswgcnoncqja.supabase.co";        // Supabase 项目地址
+var SUPABASE_ANON = "sb_publishable_RQ-ETJViWOolwRybH6pKXg_81bPbKpD"; // 匿名访问密钥
 
 /* ===== 题目数据 ===== */
 var QUESTIONS = [
@@ -478,14 +477,17 @@ function showView(name){
   window.scrollTo(0,0);
 }
 
-/* ===== 配额（本地存储） ===== */
-function getQuota(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)||"{}")||{}; }catch(e){ return {}; } }
-function getUsed(pwd){ return getQuota()[pwd] || 0; }
-function addUsed(pwd){
-  var q = getQuota(); q[pwd] = (q[pwd]||0) + 1;
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify(q)); }catch(e){}
+/* ===== Supabase 后端（密码验证 + 全局次数限制） ===== */
+var curPwd = null;      // 当前已解锁密码
+var remainLeft = null;  // 当前密码剩余可测次数
+
+function consumeAttempt(pwd){
+  return fetch(SUPABASE_URL + "/rest/v1/rpc/consume_attempt", {
+    method:"POST",
+    headers:{"apikey":SUPABASE_ANON,"Authorization":"Bearer "+SUPABASE_ANON,"Content-Type":"application/json"},
+    body: JSON.stringify({p:pwd})
+  }).then(function(res){ return res.json(); });
 }
-var curPwd = null;
 
 /* ===== toast ===== */
 var toastTimer=null;
@@ -633,12 +635,15 @@ function shareFallback(url){
 
 /* ===== 再测一次 ===== */
 document.getElementById("btnRetest").onclick=function(){
-  if(curPwd && getUsed(curPwd) >= MAX_PER_PWD){
-    toast("本次密码次数已用完，请更换密码");
-    setTimeout(function(){ showView("lock"); refreshRemain(); },900);
-    return;
-  }
-  answers = []; startQuiz();
+  if(!curPwd){ showView("lock"); return; }
+  consumeAttempt(curPwd).then(function(r){
+    if(r && r.ok){
+      remainLeft = r.remaining; refreshRemain(); answers=[]; startQuiz();
+    } else if(r && r.reason==="exhausted"){
+      toast("本次密码次数已用完，请更换密码");
+      setTimeout(function(){ showView("lock"); refreshRemain(); },900);
+    } else { toast("网络异常，请稍后重试"); }
+  }).catch(function(){ toast("网络异常，请稍后重试"); });
 };
 
 /* ===== 好评有礼弹窗 ===== */
@@ -651,16 +656,23 @@ reviewModal.onclick=function(e){ if(e.target===reviewModal) reviewModal.classLis
 /* ===== 密码验证 ===== */
 function refreshRemain(){
   var el=document.getElementById("remainTip");
-  if(curPwd){ el.innerHTML = "当前密码剩余可测 <b>"+(MAX_PER_PWD-getUsed(curPwd))+"</b> 次"; }
+  if(curPwd && remainLeft!=null){ el.innerHTML = "当前密码剩余可测 <b>"+remainLeft+"</b> 次"; }
+  else if(curPwd){ el.innerHTML = "当前密码已解锁"; }
   else{ el.innerHTML=""; }
 }
 document.getElementById("btnUnlock").onclick=function(){
   var pwd=document.getElementById("pwdInput").value.trim();
   var err=document.getElementById("lockErr");
   if(!pwd){ err.textContent="请输入体验密码"; return; }
-  if(PASSWORD_POOL.indexOf(pwd)===-1){ err.textContent="密码不正确，请重新输入"; return; }
-  if(getUsed(pwd) >= MAX_PER_PWD){ err.textContent="该密码测试次数已用完，请更换密码"; return; }
-  err.textContent=""; curPwd=pwd; refreshRemain(); startQuiz();
+  consumeAttempt(pwd).then(function(r){
+    if(r && r.ok){
+      err.textContent=""; curPwd=pwd; remainLeft=r.remaining; refreshRemain(); startQuiz();
+    } else if(r && r.reason==="invalid"){
+      err.textContent="密码不正确，请重新输入";
+    } else if(r && r.reason==="exhausted"){
+      err.textContent="该密码测试次数已用完，请更换密码";
+    } else { err.textContent="网络异常，请稍后重试"; }
+  }).catch(function(){ err.textContent="网络异常，请检查连接后重试"; });
 };
 document.getElementById("pwdInput").addEventListener("keydown",function(e){
   if(e.key==="Enter") document.getElementById("btnUnlock").click();
@@ -670,7 +682,6 @@ document.getElementById("pwdInput").addEventListener("keydown",function(e){
 function finishTest(){
   var computed = computeResult();
   renderResult(computed);
-  if(curPwd){ addUsed(curPwd); refreshRemain(); }
 }
 
 /* ===== 初始化：分享链接直达结果 ===== */
