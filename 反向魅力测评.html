@@ -460,10 +460,10 @@ var PAY = {
       steps:["打开 MPay，扫码或按手机号 +853 66752916 转账","输入 9.9 澳门元，备注「测试报告」","付款后把交易编号填到下方输入框"] },
     { id:"fps",   name:"FPS 转数快（香港）", desc:"转数快即时转账，港银通用", account:"9123 4567",
       steps:["打开银行 App，选 FPS 转数快","输入 9.9 港币，备注「测试报告」","付款后把交易编号填到下方输入框"] },
-    { id:"wechat",name:"微信支付", desc:"扫码付款，快捷方便", account:"微信收款码",
-      steps:["微信扫码付款 9.9 元","付款后把交易编号填到下方输入框"] },
-    { id:"alipay",name:"支付宝", desc:"扫码付款，快捷方便", account:"支付宝收款码",
-      steps:["支付宝扫码付款 9.9 元","付款后把交易编号填到下方输入框"] }
+    { id:"wechat",name:"微信支付", desc:"扫码付款，快捷方便", account:"微信收款码", qrImage:"assets/pay-wechat.jpg",
+      steps:["长按 / 微信扫码识别下方收款码付款 9.9 元","付款后把交易编号填到下方输入框"] },
+    { id:"alipay",name:"支付宝", desc:"扫码付款，快捷方便", account:"支付宝收款码", qrImage:"assets/pay-alipay.jpg",
+      steps:["打开支付宝扫一扫，识别下方收款码付款 9.9 元","付款后把交易编号填到下方输入框"] }
   ]
 };
 
@@ -881,7 +881,11 @@ function renderPayMethods(){
 function renderPayInfo(){
   var info=document.getElementById("payInfo");
   var steps=document.getElementById("paySteps");
-  info.innerHTML='<div class="pi-row"><b>收款方式</b><span>'+selectedMethod.name+'</span></div>'+
+  var qr = selectedMethod.qrImage
+    ? '<img src="'+selectedMethod.qrImage+'" alt="收款码" style="width:168px;height:168px;object-fit:contain;display:block;margin:8px auto 6px;border-radius:10px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.3);">'
+    : '';
+  info.innerHTML=qr+
+    '<div class="pi-row"><b>收款方式</b><span>'+selectedMethod.name+'</span></div>'+
     '<div class="pi-row"><b>收款账号 / 码</b><span>'+selectedMethod.account+'</span></div>'+
     '<div class="pi-row"><b>应付金额</b><span>'+PAY.price+' '+PAY.currency+'</span></div>';
   steps.innerHTML='<b>付款步骤：</b><br>'+selectedMethod.steps.map(function(s,i){ return (i+1)+". "+s; }).join("<br>");
