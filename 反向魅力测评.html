@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1024">
+<title>你的反向魅力 · 你无意识吸引哪一类人</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23e58bc9'/%3E%3Cstop offset='1' stop-color='%238b7cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='28' fill='url(%23g)'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%23f5f1ea'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%230d1024'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<style>
+/* ===== Token ===== */
+:root{
+  --bg:#0d1024;
+  --bg2:#121631;
+  --card:rgba(255,255,255,.05);
+  --card-line:rgba(255,255,255,.10);
+  --ink:#f5f1ea;
+  --ink-2:#b9b4d0;
+  --ink-3:#8b86a6;
+  --gold:#e9b268;
+  --rose:#e58bc9;
+  --violet:#8b7cf6;
+  --mint:#7fd8c4;
+  --danger:#ff6b81;
+  --radius:22px;
+  --shadow:0 24px 60px rgba(0,0,0,.45);
+  --font-serif:"Noto Serif SC","Songti SC","SimSun",serif;
+  --font-sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-sans);
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+/* 背景光晕 */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(58% 42% at 12% 8%, rgba(139,124,246,.28), transparent 60%),
+    radial-gradient(52% 44% at 88% 12%, rgba(229,139,201,.20), transparent 62%),
+    radial-gradient(70% 55% at 50% 105%, rgba(233,178,104,.16), transparent 60%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(1.4px 1.4px at 20% 30%, rgba(255,255,255,.5) 50%, transparent 50%),
+    radial-gradient(1.4px 1.4px at 70% 70%, rgba(255,255,255,.4) 50%, transparent 50%),
+    radial-gradient(1.2px 1.2px at 45% 85%, rgba(255,255,255,.35) 50%, transparent 50%);
+  background-size:220px 220px,260px 260px,200px 200px;
+  opacity:.5;
+  pointer-events:none;
+}
+.wrap{
+  max-width:520px;margin:0 auto;padding:28px 20px calc(40px + env(safe-area-inset-bottom));
+  position:relative;min-height:100vh;
+}
+/* ===== 视图容器 ===== */
+.view{display:none}
+.view.active{display:block;animation:fade .5s ease}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ===== 通用卡片 ===== */
+.card{
+  background:var(--card);
+  border:1px solid var(--card-line);
+  border-radius:var(--radius);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:var(--shadow);
+}
+
+/* ===== 按钮 ===== */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:15px 18px;border:none;border-radius:16px;
+  font-family:var(--font-sans);font-size:16px;font-weight:600;color:var(--ink);
+  cursor:pointer;transition:transform .15s ease, box-shadow .2s ease, opacity .2s;
+  -webkit-user-select:none;user-select:none;text-align:center;
+}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{
+  background:linear-gradient(135deg,#8b7cf6,#e58bc9);
+  color:#fff;box-shadow:0 10px 28px rgba(139,124,246,.35);
+}
+.btn-ghost{
+  background:transparent;border:1px solid var(--card-line);color:var(--ink-2);
+}
+.btn-gold{
+  background:linear-gradient(135deg,#e9b268,#ef9a7e);color:#241a10;
+  box-shadow:0 10px 26px rgba(233,178,104,.3);
+}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn{flex:1}
+
+/* ===== 封面 / 密码页 ===== */
+.brand{text-align:center;padding-top:30px}
+.brand-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:100px;
+  border:1px solid rgba(229,139,201,.4);color:var(--rose);
+  font-size:12.5px;letter-spacing:1px;
+  background:rgba(229,139,201,.08);
+}
+.brand h1{
+  font-family:var(--font-serif);font-weight:900;font-size:34px;line-height:1.2;
+  margin:18px 0 6px;letter-spacing:1px;
+}
+.brand h1 .thin{color:var(--rose);font-weight:600}
+.brand .sub{color:var(--ink-2);font-size:14.5px}
+.brand .tick{color:var(--gold)}
+.lock-note{
+  margin-top:20px;padding:16px 18px;font-size:13px;color:var(--ink-2);
+  border-left:3px solid var(--rose);background:rgba(229,139,201,.06);border-radius:0 14px 14px 0;
+}
+.lock-note b{color:var(--ink);font-weight:600}
+.input-wrap{position:relative;margin-top:26px}
+.input-wrap input{
+  width:100%;padding:17px 46px 17px 20px;border-radius:16px;
+  background:rgba(255,255,255,.06);border:1px solid var(--card-line);color:var(--ink);
+  font-size:18px;letter-spacing:4px;font-family:var(--font-sans);outline:none;
+}
+.input-wrap input::placeholder{color:var(--ink-3);letter-spacing:1px;font-size:15px}
+.input-wrap input:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(139,124,246,.18)}
+.lock-actions{margin-top:16px}
+.hint{text-align:center;font-size:12.5px;color:var(--ink-3);margin-top:14px}
+.err{color:var(--danger);font-size:13px;text-align:center;margin-top:12px;min-height:20px}
+.remain{
+  text-align:center;margin-top:14px;font-size:13px;color:var(--ink-2);
+}
+.remain b{color:var(--gold)}
+
+/* ===== 答题页 ===== */
+.quiz-head{margin-bottom:20px}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink-2);margin-bottom:10px}
+.progress-meta .pct{color:var(--gold);font-weight:600}
+.progress-bar{height:6px;border-radius:100px;background:rgba(255,255,255,.08);overflow:hidden}
+.progress-bar i{display:block;height:100%;width:0;border-radius:100px;
+  background:linear-gradient(90deg,#8b7cf6,#e58bc9);transition:width .35s ease}
+.quiz-title{font-size:12.5px;letter-spacing:1px;color:var(--violet);margin-bottom:4px}
+.q-body{padding:24px}
+.q-text{
+  font-family:var(--font-serif);font-weight:600;font-size:21px;line-height:1.5;margin-bottom:22px;
+}
+.options{display:flex;flex-direction:column;gap:12px}
+.opt{
+  display:flex;align-items:flex-start;gap:12px;padding:15px 16px;
+  background:rgba(255,255,255,.045);border:1.5px solid var(--card-line);border-radius:15px;
+  cursor:pointer;transition:all .18s ease;font-size:15px;color:var(--ink);
+}
+.opt .k{
+  flex:0 0 24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1.5px solid var(--ink-3);font-size:12.5px;color:var(--ink-3);font-weight:600;margin-top:1px;
+}
+.opt:hover{border-color:var(--violet);background:rgba(139,124,246,.08)}
+.opt.sel{border-color:var(--rose);background:rgba(229,139,201,.10)}
+.opt.sel .k{background:linear-gradient(135deg,#8b7cf6,#e58bc9);border-color:transparent;color:#fff}
+.quiz-foot{display:flex;gap:10px;margin-top:20px}
+.quiz-foot .btn{width:auto;flex:0 0 auto;padding:14px 0}
+.quiz-foot .btn-back{flex:1;min-width:96px}
+.quiz-foot .btn-next{flex:2}
+.q-tip{text-align:center;font-size:12px;color:var(--ink-3);margin-top:14px}
+
+/* ===== 结果页 ===== */
+.result-wrap{display:none}
+.result-wrap.show{display:block;animation:fade .5s ease}
+.result-card{
+  position:relative;overflow:hidden;border-radius:var(--radius);
+  padding:26px 24px 28px;border:1px solid var(--card-line);
+  background:linear-gradient(160deg, rgba(139,124,246,.16), rgba(229,139,201,.10) 55%, rgba(233,178,104,.10));
+  box-shadow:var(--shadow);
+}
+.result-card::before{
+  content:"";position:absolute;top:-70px;right:-70px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle, rgba(229,139,201,.30), transparent 65%);pointer-events:none;
+}
+.result-card::after{
+  content:"";position:absolute;bottom:-90px;left:-70px;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle, rgba(139,124,246,.26), transparent 65%);pointer-events:none;
+}
+.r-label{font-size:12.5px;letter-spacing:1.5px;color:var(--gold);position:relative;z-index:1}
+.r-name{font-family:var(--font-serif);font-weight:900;font-size:30px;margin:10px 0 4px;position:relative;z-index:1;letter-spacing:1px}
+.r-tagline{font-size:15px;color:var(--ink-2);position:relative;z-index:1;margin-bottom:6px}
+.r-hr{height:1px;background:rgba(255,255,255,.12);margin:18px 0;position:relative;z-index:1}
+.r-section{position:relative;z-index:1;margin-bottom:18px}
+.r-section h4{font-size:13px;letter-spacing:1px;color:var(--rose);margin-bottom:8px;font-family:var(--font-sans);font-weight:700}
+.r-section p{font-size:14.5px;color:var(--ink-2);line-height:1.75}
+.r-quote{
+  position:relative;z-index:1;margin:20px 0 0;padding:16px 18px;border-radius:14px;
+  background:rgba(13,16,36,.35);border:1px solid rgba(233,178,104,.28);
+  font-family:var(--font-serif);font-size:16px;color:var(--gold);text-align:center;line-height:1.7;
+}
+.r-disclaimer{font-size:11.5px;color:var(--ink-3);text-align:center;margin:18px 0 6px;position:relative;z-index:1}
+.result-actions{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.result-actions .btn{padding:14px 16px}
+.result-actions .btn-row{display:flex;gap:10px}
+.result-actions .btn-row .btn{flex:1;padding:14px 4px;font-size:14.5px}
+
+/* ===== 弹窗 ===== */
+.modal-mask{
+  position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
+  background:rgba(5,7,18,.72);padding:24px;backdrop-filter:blur(4px);
+}
+.modal-mask.show{display:flex;animation:fade .25s ease}
+.modal{
+  width:100%;max-width:360px;background:linear-gradient(165deg,#1b2040,#151935);
+  border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:28px 22px;text-align:center;
+  box-shadow:var(--shadow);position:relative;
+}
+.modal .m-icon{width:54px;height:54px;margin:0 auto 14px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#8b7cf6,#e58bc9);font-size:26px;color:#fff}
+.modal h3{font-family:var(--font-serif);font-size:21px;margin-bottom:10px}
+.modal p{font-size:14.5px;color:var(--ink-2);line-height:1.8;margin-bottom:18px}
+.modal p b{color:var(--gold)}
+.modal .btn{margin-top:4px}
+.modal .m-close{
+  position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:none;color:var(--ink-2);font-size:16px;cursor:pointer;line-height:1;
+  font-family:var(--font-sans);
+}
+
+/* ===== 解锁完整报告 / 支付 ===== */
+.unlock-panel{
+  margin-top:18px;padding:20px 18px;border-radius:16px;position:relative;z-index:1;
+  background:linear-gradient(160deg, rgba(13,16,36,.5), rgba(233,178,104,.10));
+  border:1px solid rgba(233,178,104,.30);text-align:center;
+}
+.unlock-panel .u-tag{font-size:12px;letter-spacing:1px;color:var(--gold);margin-bottom:6px}
+.unlock-panel h4{font-family:var(--font-serif);font-size:18px;margin-bottom:8px}
+.unlock-panel p{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:14px}
+.unlock-panel .btn{max-width:280px;margin:0 auto}
+.unlock-panel .u-note{font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.6}
+.blur-box{
+  position:relative;overflow:hidden;margin-bottom:14px;padding-bottom:4px;
+}
+.blur-box .b-cont{filter:blur(5px);opacity:.6;user-select:none;pointer-events:none}
+.blur-box .b-mask{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg, rgba(13,16,36,0) 0%, rgba(13,16,36,.45) 100%);
+}
+.blur-box .b-mask span{
+  font-size:12px;color:var(--gold);padding:8px 14px;border:1px solid rgba(233,178,104,.4);
+  border-radius:100px;background:rgba(13,16,36,.6);
+}
+.free-badge{
+  display:inline-block;padding:4px 10px;border-radius:100px;font-size:11px;color:#7fd8c4;
+  border:1px solid rgba(127,216,196,.35);background:rgba(127,216,196,.08);margin-bottom:10px;
+}
+.full-badge{
+  display:inline-block;padding:4px 10px;border-radius:100px;font-size:11px;color:var(--gold);
+  border:1px solid rgba(233,178,104,.4);background:rgba(233,178,104,.1);margin-bottom:10px;
+}
+
+/* 支付弹窗 */
+.pay-modal{max-width:400px;text-align:left}
+.pay-modal h3{text-align:center}
+.pay-modal .pm-sub{text-align:center;font-size:13px;color:var(--ink-3);margin:0 0 16px}
+.pay-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.pay-opt{
+  display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;cursor:pointer;
+  background:rgba(255,255,255,.05);border:1.5px solid var(--card-line);transition:all .18s ease;
+}
+.pay-opt .po-ico{
+  flex:0 0 38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#8b7cf6,#e58bc9);color:#fff;font-weight:800;font-size:13px;
+}
+.pay-opt .po-name{font-size:15px;font-weight:600;color:var(--ink)}
+.pay-opt .po-desc{font-size:12px;color:var(--ink-3);margin-top:2px}
+.pay-opt .po-radio{
+  margin-left:auto;flex:0 0 20px;height:20px;border-radius:50%;
+  border:1.5px solid var(--ink-3);display:flex;align-items:center;justify-content:center;
+}
+.pay-opt.sel{border-color:var(--gold);background:rgba(233,178,104,.08)}
+.pay-opt.sel .po-radio{border-color:var(--gold)}
+.pay-opt.sel .po-radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.pay-info{
+  background:rgba(255,255,255,.05);border:1px solid var(--card-line);border-radius:14px;
+  padding:14px 16px;margin-bottom:14px;
+}
+.pay-info .pi-row{display:flex;justify-content:space-between;font-size:14px;padding:5px 0}
+.pay-info .pi-row b{color:var(--ink);font-weight:600}
+.pay-info .pi-row span{color:var(--ink-2)}
+.pay-fee{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;border-radius:14px;margin-bottom:14px;
+  background:rgba(233,178,104,.1);border:1px solid rgba(233,178,104,.35);
+}
+.pay-fee .pf-l{font-size:13px;color:var(--ink-2)}
+.pay-fee .pf-l b{color:var(--ink);font-weight:700}
+.pay-fee .pf-v{font-size:24px;font-weight:900;color:var(--gold)}
+.pay-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.pay-field label{font-size:12.5px;color:var(--ink-2)}
+.pay-field input{
+  width:100%;padding:13px 14px;border-radius:12px;background:rgba(255,255,255,.06);
+  border:1px solid var(--card-line);color:var(--ink);font-size:15px;font-family:var(--font-sans);outline:none;
+}
+.pay-field input:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(139,124,246,.18)}
+.pay-note{font-size:12px;color:var(--ink-3);line-height:1.7;text-align:center;margin-bottom:16px}
+.pay-note b{color:var(--gold)}
+.pm-steps{font-size:12.5px;color:var(--ink-2);line-height:1.8;margin-bottom:14px;padding-left:4px}
+.pm-steps b{color:var(--ink)}
+.await-panel{text-align:center;padding:6px 0}
+.await-panel .a-ico{font-size:34px;margin-bottom:10px;color:var(--gold)}
+.await-panel p{font-size:14px;color:var(--ink-2);line-height:1.8}
+.await-panel p b{color:var(--gold)}
+
+/* ===== toast ===== */
+#toast{
+  position:fixed;left:50%;bottom:44px;transform:translateX(-50%) translateY(20px);
+  background:rgba(30,34,60,.96);border:1px solid var(--card-line);color:var(--ink);
+  padding:12px 20px;border-radius:14px;font-size:14px;opacity:0;pointer-events:none;
+  transition:all .3s ease;z-index:200;max-width:86%;text-align:center;box-shadow:var(--shadow);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== 隐藏的导出容器 ===== */
+#exportRoot{position:absolute;left:-9999px;top:0;width:420px}
+
+/* ===== 桌面端微调 ===== */
+@media(min-width:768px){
+  .wrap{padding:44px 24px calc(60px + env(safe-area-inset-bottom))}
+  .brand h1{font-size:40px}
+  .q-text{font-size:22px}
+}
+
+/* reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 视图：密码页 ===== -->
+  <section id="view-lock" class="view active">
+    <div class="brand">
+      <div class="brand-badge">REVERSE ATTRACTION TEST</div>
+      <h1>你的<span class="thin">「反向魅力」</span><br>你无意识吸引哪一类人</h1>
+      <p class="sub">你以为你在选择，其实你的气场早就在筛选。</p>
+    </div>
+    <div class="lock-note">
+      <b>测试说明：</b> 约 3 分钟，12 道情境选择题。本测评为趣味娱乐用途，非专业心理评估。
+    </div>
+    <div class="input-wrap">
+      <input id="pwdInput" type="password" inputmode="numeric" placeholder="输入体验密码" autocomplete="off" maxlength="12">
+    </div>
+    <div class="lock-actions">
+      <button id="btnUnlock" class="btn btn-primary">开始测试</button>
+    </div>
+    <div id="lockErr" class="err"></div>
+    <div id="remainTip" class="remain"></div>
+    <p class="hint">输入正确密码即可开始 · 不限使用次数</p>
+  </section>
+
+  <!-- ===== 视图：答题页 ===== -->
+  <section id="view-quiz" class="view">
+    <div class="quiz-head">
+      <div class="progress-meta"><span id="qIndex">第 1 题 / 共 12 题</span><span id="qPct" class="pct">0%</span></div>
+      <div class="progress-bar"><i id="qBar"></i></div>
+    </div>
+    <div class="card">
+      <div class="q-body">
+        <div id="qTitle" class="quiz-title"></div>
+        <p id="qText" class="q-text"></p>
+        <div id="qOptions" class="options"></div>
+        <div class="quiz-foot">
+          <button id="btnBack" class="btn btn-ghost btn-back">← 上一题</button>
+          <button id="btnNext" class="btn btn-primary btn-next" disabled>下一题 →</button>
+        </div>
+      </div>
+    </div>
+    <p class="q-tip">已选择的答案可随时返回修改</p>
+  </section>
+
+  <!-- ===== 视图：结果页 ===== -->
+  <section id="view-result" class="view">
+    <div id="resultRoot"></div>
+    <div class="result-actions">
+      <button id="btnSave" class="btn btn-gold">保存测试结果（生成精美长图）</button>
+      <div class="btn-row">
+        <button id="btnShare" class="btn btn-primary">复制结果链接</button>
+        <button id="btnRetest" class="btn btn-ghost">再测一次</button>
+      </div>
+      <button id="btnReview" class="btn btn-ghost">好评有礼 · 领 1 元返现</button>
+    </div>
+    <div class="r-disclaimer">趣味测试 · 仅供参考 · 请理性看待结果</div>
+  </section>
+
+</div>
+
+<!-- ===== 好评有礼弹窗 ===== -->
+<div id="reviewModal" class="modal-mask">
+  <div class="modal">
+    <button id="reviewClose" class="m-close" aria-label="关闭">×</button>
+    <div class="m-icon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 7V2"/><path d="M12 2c-2 0-3 2-3 2s0 2 3 2 3-2 3-2-1-2-3-2z"/></svg></div>
+    <h3>好评有礼</h3>
+    <p>完成测试后，请在店铺留下<b>五星好评</b>。好评完成后，请<b>联系客服并发送好评截图</b>，即可获得 <b>1 元现金返现</b>。</p>
+    <button id="reviewGot" class="btn btn-primary">知道了，谢谢提醒</button>
+  </div>
+</div>
+
+<!-- ===== 解锁支付弹窗 ===== -->
+<div id="payModal" class="modal-mask">
+  <div class="modal pay-modal">
+    <button id="payClose" class="m-close" aria-label="关闭">×</button>
+    <h3>解锁完整深度报告</h3>
+    <p class="pm-sub">心理学依据 · 隐藏盲区 · 相处建议，一次看全</p>
+    <div class="pay-methods" id="payMethods"></div>
+    <div class="pay-fee">
+      <div class="pf-l">完整报告解锁价<br><span style="font-size:11px;color:var(--ink-3)">一次付费 · 永久解锁</span></div>
+      <div class="pf-v" id="payFeeVal"></div>
+    </div>
+    <div id="payStep2" style="display:none">
+      <div class="pay-info" id="payInfo"></div>
+      <div class="pm-steps" id="paySteps"></div>
+      <div class="pay-field">
+        <label for="payTxn">付款后的交易编号 / 转账备注</label>
+        <input id="payTxn" type="text" placeholder="填写交易编号，用于工作人员核销">
+      </div>
+      <button id="paySubmit" class="btn btn-gold">我已付款 · 提交核销</button>
+      <p class="pay-note">支付后请保留交易记录，工作人员核对后即时解锁。<b>同一人格结果只需解锁一次</b>，换设备也可用同一密码找回。</p>
+    </div>
+    <div id="payAwait" style="display:none" class="await-panel">
+      <div class="a-ico">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#e9b268" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+      </div>
+      <p>已提交，订单号为 <b id="payOrderNo"></b>。<br>请稍候，工作人员核对后将自动解锁完整报告。</p>
+      <button id="payDone" class="btn btn-primary" style="margin-top:14px">知道了</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- 导出的长图根节点 -->
+<div id="exportRoot"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+/* ===== 配置 ===== */
+var SUPABASE_URL  = "https://qczgmhtfxswgcnoncqja.supabase.co";        // Supabase 项目地址
+var SUPABASE_ANON = "sb_publishable_RQ-ETJViWOolwRybH6pKXg_81bPbKpD"; // 匿名访问密钥
+
+/* ===== 解锁 & 支付配置（按需改成你自己的收款信息） ===== */
+var PAY = {
+  price: 9.9,                // 解锁价（本地货币）
+  currency: "MOP/HKD",       // 澳门币 MOP / 港币 HKD，可按需改
+  mode: "receipt",           // receipt = 收款码/转账 + 人工核销（个人即刻可用，无需商户号）
+                             // api = 实时支付回调（需商户号，见 SUPABASE 回调预留）
+  methods: [
+    { id:"mpay",  name:"MPay（澳门）", desc:"扫码或手机号转账，即时到账", account:"6888 8888",
+      steps:["打开 MPay，扫码或按手机号转账","输入 9.9 澳门元，备注「测试报告」","付款后把交易编号填到下方输入框"] },
+    { id:"fps",   name:"FPS 转数快（香港）", desc:"转数快即时转账，港银通用", account:"9123 4567",
+      steps:["打开银行 App，选 FPS 转数快","输入 9.9 港币，备注「测试报告」","付款后把交易编号填到下方输入框"] },
+    { id:"wechat",name:"微信支付", desc:"扫码付款，快捷方便", account:"微信收款码",
+      steps:["微信扫码付款 9.9 元","付款后把交易编号填到下方输入框"] },
+    { id:"alipay",name:"支付宝", desc:"扫码付款，快捷方便", account:"支付宝收款码",
+      steps:["支付宝扫码付款 9.9 元","付款后把交易编号填到下方输入框"] }
+  ]
+};
+
+/* 设备唯一标识（用于记忆解锁状态） */
+function getDeviceId(){
+  var k="ra_device_id", d=null;
+  try{ d=localStorage.getItem(k); }catch(e){}
+  if(!d){
+    d="dev-"+(Math.random().toString(36).slice(2,10))+Date.now().toString(36);
+    try{ localStorage.setItem(k,d); }catch(e){}
+  }
+  return d;
+}
+var DEVICE_ID = getDeviceId();
+var UNLOCK_CACHE = {};    // type -> true（本会话内已解锁）
+var curResult = null;     // 当前人格计算结果
+var selectedMethod = PAY.methods[0];
+
+function SUPABASE_HEADERS(){
+  return {"apikey":SUPABASE_ANON,"Authorization":"Bearer "+SUPABASE_ANON,"Content-Type":"application/json"};
+}
+function truncate(str, n){
+  if(!str) return "";
+  return str.length>n ? str.slice(0,n)+"…" : str;
+}
+
+/* ===== 题目数据 ===== */
+var QUESTIONS = [
+  {title:"能量 · 日常", text:"周末下午，你最想怎么过？", options:[
+    {t:"约朋友聚会探店、逛街喝奶茶，闹哄哄的才有劲", tag:"Vibe"},
+    {t:"一个人在家看书、听歌、发呆，就很满足", tag:"Mystery"},
+    {t:"和两三个知己找个安静咖啡馆深聊", tag:"Tender"},
+    {t:"收拾屋子、整理生活，把一周的乱摊子理顺", tag:"Cure"}
+  ]},
+  {title:"表达 · 被感知", text:"朋友最常用哪三个字形容你？", options:[
+    {t:"靠谱、让人安心", tag:"Anchor"},
+    {t:"有趣、脑洞大、气氛担当", tag:"Vibe"},
+    {t:"有想法、说话有说服力", tag:"Guide"},
+    {t:"安静但很有深度", tag:"Mystery"}
+  ]},
+  {title:"能量 · 情绪承接", text:"朋友深夜向你倒苦水，你的第一反应是？", options:[
+    {t:"先听完，给温暖的安慰和拥抱", tag:"Cure"},
+    {t:"帮 TA 把乱麻理清楚，给个可行方案", tag:"Guide"},
+    {t:"想办法逗 TA 开心，转移注意力", tag:"Vibe"},
+    {t:"安静陪着，不多说话", tag:"Anchor"}
+  ]},
+  {title:"表达 · 姿态", text:"开会或小组讨论时，你通常是？", options:[
+    {t:"主动抛观点、带动节奏", tag:"Vibe"},
+    {t:"先听，关键处补一句定调", tag:"Guide"},
+    {t:"默默负责收尾、兜底", tag:"Anchor"},
+    {t:"总提出别人没想到的视角", tag:"Tender"}
+  ]},
+  {title:"关系 · 自我展露", text:"你愿意向别人展示自己的脆弱吗？", options:[
+    {t:"很少，习惯报喜不报忧", tag:"Mystery"},
+    {t:"只对极信任的人才松口", tag:"Tender"},
+    {t:"看场合，需要时会表达", tag:"Cure"},
+    {t:"相对坦诚，不怕被看穿", tag:"Anchor"}
+  ]},
+  {title:"磁场 · 镜像", text:"你自己觉得，最容易被哪一类人靠近？", options:[
+    {t:"需要依靠、容易焦虑的人", tag:"Cure"},
+    {t:"同频、有共同爱好的人", tag:"Vibe"},
+    {t:"有主见、慕强的人", tag:"Mystery"},
+    {t:"温和但内心有故事的人", tag:"Guide"}
+  ]},
+  {title:"能量 · 冲突", text:"和别人意见不合时，你更倾向？", options:[
+    {t:"表达但避免撕破脸，求折中", tag:"Cure"},
+    {t:"摆道理，据理力争", tag:"Guide"},
+    {t:"先冷下来，等对方来找我", tag:"Tender"},
+    {t:"直接摊开讲明白", tag:"Anchor"}
+  ]},
+  {title:"表达 · 生活感", text:"你的房间或工位通常是？", options:[
+    {t:"整洁有条理、有固定秩序", tag:"Anchor"},
+    {t:"有生活感，摆满喜欢的物件和绿植", tag:"Cure"},
+    {t:"简约克制、很少杂物", tag:"Mystery"},
+    {t:"有点乱但有自己的逻辑", tag:"Tender"}
+  ]},
+  {title:"能量 · 耗散", text:"参加完大型聚会，你通常是？", options:[
+    {t:"精力满满，还想续摊", tag:"Vibe"},
+    {t:"开心但有点累，想独处回血", tag:"Mystery"},
+    {t:"其实不太想去，去了话也不多", tag:"Tender"},
+    {t:"看和谁在一起，处得来就放开", tag:"Guide"}
+  ]},
+  {title:"关系 · 被依赖", text:"朋友们遇到大事，最常找你？", options:[
+    {t:"当树洞，需要安慰理解时", tag:"Cure"},
+    {t:"拿主意、做决定时", tag:"Guide"},
+    {t:"需要有人带着放松、解压时", tag:"Vibe"},
+    {t:"需要有人懂 TA、看清问题时", tag:"Mystery"}
+  ]},
+  {title:"能量 · 隐藏面", text:"别人眼里你可能很通透，但私下其实？", options:[
+    {t:"也在硬撑，报喜不报忧", tag:"Tender"},
+    {t:"有很多天马行空、不为人知的想法", tag:"Mystery"},
+    {t:"渴望被理解却很少说出口", tag:"Guide"},
+    {t:"有点完美主义，怕让人失望", tag:"Anchor"}
+  ]},
+  {title:"关系 · 核心诉求", text:"你最想在亲近关系里得到的是？", options:[
+    {t:"被信任、被需要", tag:"Cure"},
+    {t:"同频共鸣", tag:"Vibe"},
+    {t:"被认可和欣赏", tag:"Tender"},
+    {t:"深度理解和真正的看见", tag:"Mystery"}
+  ]}
+];
+
+/* ===== 结果数据 ===== */
+var RESULTS = {
+  Cure: {
+    name:"治愈系港湾",
+    tagline:"你的磁场是一杯深夜的暖汤——焦虑的人靠近你会自动降速。",
+    attract:"外表坚强但内心疲惫的高敏感人群、习惯自我硬撑的「报喜不报忧」者、在职场和感情里长期紧绷、需要一个安全出口的人。他们未必会直说，但会反复「路过」你。",
+    why:"心理学上这叫「安全基地（Secure Base）」效应——人在焦虑时，天然会被能提供情绪接纳的对象吸引。你的低防御感让对方产生自我展露的安全感，敢于在你面前卸下铠甲。",
+    side:"你容易成为所有人的情绪垃圾桶，自己却没人可倒。要留意区分「被需要」和「被消耗」。",
+    advise:"学会设情绪边界，也允许自己偶尔「麻烦」别人。",
+    quote:"我吸引的，是那些终于敢在别人面前不坚强的人。"
+  },
+  Tender: {
+    name:"温柔守护者",
+    tagline:"你的磁场是冬天的毛毯——缺乏安全感的人，会不自觉地贴过来取暖。",
+    attract:"对稳定和确定性有强烈需求的人、在关系中反复试探的「回避-焦虑型」、以及需要兜底和陪伴的「慢热型」。",
+    why:"在依恋理论里，你提供的是「情感安全的确定性」，恰好是焦虑型依恋者的渴求。心理学上这种「稳定而不索取」的姿态，对内心动荡的人有致命吸引力。",
+    side:"你可能被过度依赖，形成「他离不开我」的关系惯性，最后困住彼此成长。",
+    advise:"守护不等于替他扛，适时退半步，让对方练习独立。",
+    quote:"我不是要拉住谁，只是我的存在，让有些人敢往下跳。"
+  },
+  Vibe: {
+    name:"氛围制造机",
+    tagline:"你的磁场是一场即兴派对——压抑和沉闷的人，一靠近你就被点亮。",
+    attract:"长期高压、情绪被过度克制的人、在严肃工作里被磨平了热情的人、以及向往轻松却不会主动制造轻松的人。",
+    why:"你激活了对方的「积极情绪资源」，触发心理学上的「情绪传染（Emotional Contagion）」。对很多人而言，你代表着松弛感和被允许快乐的出口。",
+    side:"大家爱和你玩，却不一定会认真对待你的情绪。你可能沦为「气氛担当」而无人接住你的低落。",
+    advise:"不只做快乐的中心，也敢于偶尔停下来说「我今天不太好」。",
+    quote:"我吸引的，是那些好久没真正笑过的人。"
+  },
+  Guide: {
+    name:"清醒向导",
+    tagline:"你的磁场是一座灯塔——在路口徘徊的人，会循着你的逻辑靠岸。",
+    attract:"正在迷茫期的人、选择困难症患者、想成长却找不到方法的人、以及欣赏「脑子清醒」的慕强者。",
+    why:"你的理性和方向感提供了认知上的锚定与确定感，满足马斯洛需求层次中「尊重与自我实现」层面的诉求，让犹豫的人觉得「跟着你能少走弯路」。",
+    side:"关系容易变成「单方面请教」，你被高估为无所不能，却在情感层面显得疏离。",
+    advise:"适时放下「解决问题」，单纯陪对方感受，而不只是给方案。",
+    quote:"我吸引的，是在迷雾里想找一条路的人——而我恰好拎着一盏灯。"
+  },
+  Mystery: {
+    name:"神秘观察者",
+    tagline:"你的磁场是一本只翻开一页的书——好奇和有探索欲的人，会想尽办法读完整本。",
+    attract:"慕强、有猎奇心的人、享受「慢慢读懂一个人」的慢热玩家、以及厌倦一眼看穿的庸常、渴望深度连接的人。",
+    why:"你克制而有所保留的自我展露，触发了对方的「认知闭合需求」与好奇心——心理学上，信息的不完整反而提高吸引力；荣格所说的「影子人格」，也让别人在你身上看到他们压抑的另一面。",
+    side:"你不轻易交心，容易让想靠近的人觉得「进不去」，或误以为你高傲疏离。",
+    advise:"神秘感是钩子，深连接才是答案。主动开放一点，别让好奇耗尽。",
+    quote:"我吸引的，是那些不甘心只认识表面的人。"
+  },
+  Anchor: {
+    name:"坚定兜底者",
+    tagline:"你的磁场是一根不动摇的地基——容易摇摆的人，会把重心托付给你。",
+    attract:"容易动摇、怕做错决定的人、在风暴中需要「有人说了算」的人、以及渴望确定感、希望被稳稳接住的人。",
+    why:"你提供的是「决策确定性与情绪稳定性」，满足对方对可控感的深层需求。依恋理论中，这种可靠的回归基地让人敢于离开去探索，因为知道总有人兜底。",
+    side:"你可能被当成「定海神针」却承担太多，自己偶尔也想靠一靠却没人接。",
+    advise:"别总做「唯一支柱」，允许自己也动摇、被照顾。",
+    quote:"我吸引的，是那些终于可以放心把重心放下来的人。"
+  }
+};
+
+var ORDER = ["Cure","Tender","Vibe","Guide","Mystery","Anchor"];
+
+/* ===== 视图路由 ===== */
+var views = {lock:document.getElementById("view-lock"), quiz:document.getElementById("view-quiz"), result:document.getElementById("view-result")};
+function showView(name){
+  Object.keys(views).forEach(function(k){ views[k].classList.remove("active"); });
+  views[name].classList.add("active");
+  window.scrollTo(0,0);
+}
+
+/* ===== Supabase 后端（密码验证 · 不限次数） ===== */
+var curPwd = null;      // 当前已解锁密码
+
+function verifyPassword(pwd){
+  return fetch(SUPABASE_URL + "/rest/v1/rpc/verify_password", {
+    method:"POST",
+    headers:{"apikey":SUPABASE_ANON,"Authorization":"Bearer "+SUPABASE_ANON,"Content-Type":"application/json"},
+    body: JSON.stringify({p:pwd})
+  }).then(function(res){ return res.json(); });
+}
+
+/* ===== toast ===== */
+var toastTimer=null;
+function toast(msg){
+  var el=document.getElementById("toast");
+  el.textContent=msg; el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(function(){ el.classList.remove("show"); },2600);
+}
+
+/* ===== 答题状态 ===== */
+var answers = [];       // answers[i] = 选中选项 index，未答为 null
+var qIdx = 0;
+
+function startQuiz(){
+  qIdx=0;
+  showView("quiz");
+  renderQ();
+}
+function renderQ(){
+  var q = QUESTIONS[qIdx];
+  document.getElementById("qTitle").textContent = q.title;
+  document.getElementById("qText").textContent = q.text;
+  document.getElementById("qIndex").textContent = "第 "+(qIdx+1)+" 题 / 共 "+QUESTIONS.length+" 题";
+  document.getElementById("qPct").textContent = Math.round(((qIdx)/(QUESTIONS.length))*100)+"%";
+  document.getElementById("qBar").style.width = ((qIdx)/(QUESTIONS.length))*100+"%";
+  var box = document.getElementById("qOptions"); box.innerHTML="";
+  q.options.forEach(function(opt, i){
+    var d=document.createElement("div");
+    d.className="opt"+(answers[qIdx]===i?" sel":"");
+    d.innerHTML='<span class="k">'+String.fromCharCode(65+i)+'</span><span>'+opt.t+'</span>';
+    d.onclick=function(){ answers[qIdx]=i; renderQ(); };
+    box.appendChild(d);
+  });
+  document.getElementById("btnBack").disabled = (qIdx===0);
+  document.getElementById("btnNext").disabled = (answers[qIdx]===undefined||answers[qIdx]===null);
+  document.getElementById("btnNext").textContent = (qIdx===QUESTIONS.length-1) ? "查看结果 →" : "下一题 →";
+}
+document.getElementById("btnBack").onclick=function(){
+  if(qIdx>0){ qIdx--; renderQ(); }
+};
+document.getElementById("btnNext").onclick=function(){
+  if(answers[qIdx]===undefined||answers[qIdx]===null){ toast("请先选择一个选项"); return; }
+  if(qIdx<QUESTIONS.length-1){ qIdx++; renderQ(); }
+  else{ finishTest(); }
+};
+
+/* ===== 结果计算 ===== */
+function computeResult(){
+  var score={}; ORDER.forEach(function(k){ score[k]=0; });
+  for(var i=0;i<answers.length;i++){
+    var idx=answers[i];
+    if(idx==null||idx<0) continue;
+    var tag=QUESTIONS[i].options[idx].tag;
+    score[tag]++;
+  }
+  var best=ORDER[0], max=-1;
+  ORDER.forEach(function(k){ if(score[k]>max){ max=score[k]; best=k; } });
+  return {key:best, data:RESULTS[best], score:score};
+}
+
+/* ===== 结果渲染（免费 / 解锁 分层） ===== */
+function isUnlockedLocal(key){ return !!UNLOCK_CACHE[key]; }
+
+function buildFreeHTML(c){
+  var r=c.data;
+  return '<div class="result-card">'+
+    '<span class="free-badge">免费版 · 人格已测出</span>'+
+    '<div class="r-label">你的反向魅力人格</div>'+
+    '<div class="r-name">'+r.name+'</div>'+
+    '<div class="r-tagline">'+r.tagline+'</div>'+
+    '<div class="r-hr"></div>'+
+    '<div class="r-section"><h4>你吸引的，是这样的人</h4><p>'+truncate(r.attract,78)+'</p></div>'+
+    '<div class="r-quote">「'+r.quote+'」</div>'+
+    '<div class="unlock-panel">'+
+      '<div class="u-tag">深度报告 · 需解锁</div>'+
+      '<h4>完整四维人格解读</h4>'+
+      '<div class="blur-box">'+
+        '<div class="b-cont">'+
+          '<div class="r-section"><h4>为什么会吸引（心理学依据）</h4><p>'+r.why+'</p></div>'+
+          '<div class="r-section"><h4>你的隐藏盲区</h4><p>'+r.side+'</p></div>'+
+          '<div class="r-section"><h4>相处建议</h4><p>'+r.advise+'</p></div>'+
+        '</div>'+
+        '<div class="b-mask"><span>解锁后查看完整解读</span></div>'+
+      '</div>'+
+      '<button class="btn btn-gold" onclick="openPay()">解锁完整报告 · '+PAY.price+' 元</button>'+
+      '<div class="u-note">心理学依据 · 盲区提醒 · 相处建议，一次看全 · 永久解锁</div>'+
+    '</div>'+
+  '</div>';
+}
+function buildUnlockedHTML(c){
+  var r=c.data;
+  return '<div class="result-card">'+
+    '<span class="full-badge">完整报告 · 已解锁</span>'+
+    '<div class="r-label">你的反向魅力人格</div>'+
+    '<div class="r-name">'+r.name+'</div>'+
+    '<div class="r-tagline">'+r.tagline+'</div>'+
+    '<div class="r-hr"></div>'+
+    '<div class="r-section"><h4>你吸引的，是这样的人</h4><p>'+r.attract+'</p></div>'+
+    '<div class="r-section"><h4>为什么会吸引（心理学依据）</h4><p>'+r.why+'</p></div>'+
+    '<div class="r-section"><h4>你的隐藏盲区</h4><p>'+r.side+'</p></div>'+
+    '<div class="r-section"><h4>相处建议</h4><p>'+r.advise+'</p></div>'+
+    '<div class="r-quote">「'+r.quote+'」</div>'+
+  '</div>';
+}
+
+function renderResult(computed){
+  curResult = computed;
+  var root=document.getElementById("resultRoot");
+  root.innerHTML = isUnlockedLocal(computed.key) ? buildUnlockedHTML(computed) : buildFreeHTML(computed);
+  showView("result");
+  // 异步向后端核对解锁状态（该设备/密码下可能已购买）
+  checkUnlock(computed.key).then(function(ok){
+    if(ok){
+      UNLOCK_CACHE[computed.key]=true;
+      document.getElementById("resultRoot").innerHTML = buildUnlockedHTML(computed);
+      toast("完整报告已解锁");
+    }
+  });
+}
+
+/* ===== 解锁状态查询 ===== */
+function checkUnlock(key){
+  if(UNLOCK_CACHE[key]) return Promise.resolve(true);
+  return fetch(SUPABASE_URL+"/rest/v1/rpc/get_unlocks",{method:"POST",headers:SUPABASE_HEADERS(),body:JSON.stringify({p_device_id:DEVICE_ID})})
+    .then(function(r){ return r.json(); })
+    .then(function(rows){
+      if(Array.isArray(rows)){
+        rows.forEach(function(row){ if(row && row.type) UNLOCK_CACHE[row.type]=true; });
+      }
+      return !!UNLOCK_CACHE[key];
+    })
+    .catch(function(){ return !!UNLOCK_CACHE[key]; });
+}
+
+/* ===== 长图导出（免费版 / 完整版） ===== */
+function buildExport(computed){
+  var r=computed.data;
+  var unlocked = isUnlockedLocal(computed.key);
+  var deep = unlocked
+    ? ('<div style="margin-bottom:16px;"><div style="font-size:13px;color:#e58bc9;font-weight:700;margin-bottom:6px;">为什么会吸引（心理学依据）</div><div style="font-size:14px;color:#d6d2e6;line-height:1.8;">'+r.why+'</div></div>'+
+       '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#e58bc9;font-weight:700;margin-bottom:6px;">你的隐藏盲区</div><div style="font-size:14px;color:#d6d2e6;line-height:1.8;">'+r.side+'</div></div>'+
+       '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#e58bc9;font-weight:700;margin-bottom:6px;">相处建议</div><div style="font-size:14px;color:#d6d2e6;line-height:1.8;">'+r.advise+'</div></div>')
+    : '<div style="margin-bottom:14px;font-size:12px;color:#e9b268;text-align:center;line-height:1.6;">解锁完整版后可保存四维深度解读</div>';
+  var el=document.getElementById("exportRoot");
+  el.innerHTML =
+    '<div style="width:420px;background:linear-gradient(160deg,#131633,#1a1f42);color:#f5f1ea;font-family:\'Noto Sans SC\',sans-serif;padding:34px 30px 26px;box-sizing:border-box;">'+
+      '<div style="font-size:12px;letter-spacing:2px;color:#e58bc9;margin-bottom:6px;">REVERSE ATTRACTION TEST</div>'+
+      '<div style="font-size:26px;font-weight:800;font-family:\'Noto Serif SC\',serif;margin-bottom:2px;">你的反向魅力人格</div>'+
+      '<div style="font-size:34px;font-weight:900;color:#e9b268;font-family:\'Noto Serif SC\',serif;margin:8px 0 4px;">'+r.name+'</div>'+
+      '<div style="font-size:15px;color:#b9b4d0;margin-bottom:18px;line-height:1.6;">'+r.tagline+'</div>'+
+      '<div style="height:1px;background:rgba(255,255,255,.14);margin-bottom:18px;"></div>'+
+      '<div style="margin-bottom:16px;"><div style="font-size:13px;color:#e58bc9;font-weight:700;margin-bottom:6px;">你吸引的，是这样的人</div><div style="font-size:14px;color:#d6d2e6;line-height:1.8;">'+(unlocked?r.attract:truncate(r.attract,78))+'</div></div>'+
+      deep+
+      '<div style="background:rgba(13,16,36,.5);border:1px solid rgba(233,178,104,.3);border-radius:14px;padding:16px;text-align:center;font-size:16px;color:#e9b268;font-family:\'Noto Serif SC\',serif;line-height:1.7;margin-bottom:20px;">「'+r.quote+'」</div>'+
+      '<div style="text-align:center;font-size:12px;color:#8b86a6;line-height:1.7;">趣味测试 · 仅供参考 · 非专业心理评估</div>'+
+    '</div>';
+  return el;
+}
+document.getElementById("btnSave").onclick=function(){
+  var computed = computeResult();
+  var el = buildExport(computed);
+  toast("正在生成图片…");
+  setTimeout(function(){
+    html2canvas(el, {scale:2, backgroundColor:"#131633", useCORS:true, logging:false})
+      .then(function(canvas){
+        var link=document.createElement("a");
+        link.download = "反向魅力-" + computed.data.name + ".png";
+        canvas.toBlob(function(blob){
+          if(blob){
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link); link.click();
+            setTimeout(function(){ URL.revokeObjectURL(link.href); link.remove(); },800);
+            toast("已生成，请保存到相册 / 图片文件夹");
+          } else {
+            window.open(canvas.toDataURL("image/png"), "_blank");
+          }
+        }, "image/png");
+      })
+      .catch(function(){ toast("生成失败，请重试"); });
+  },80);
+};
+
+/* ===== 复制结果链接 ===== */
+function encodeAns(){
+  var a = answers.slice(); for(var i=0;i<a.length;i++){ if(a[i]==null||a[i]<0) a[i]=-1; }
+  return btoa(unescape(encodeURIComponent(JSON.stringify(a))));
+}
+function decodeAns(str){
+  try{ var j=JSON.parse(decodeURIComponent(escape(atob(str)))); return j; }catch(e){ return null; }
+}
+document.getElementById("btnShare").onclick=function(){
+  if(answers.length===0){ toast("请先完成测试"); return; }
+  var url = location.origin + location.pathname + "?r=" + encodeAns();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){ toast("结果链接已复制，去分享吧"); },function(){ shareFallback(url); });
+  } else { shareFallback(url); }
+};
+function shareFallback(url){
+  var ta=document.createElement("textarea"); ta.value=url; document.body.appendChild(ta);
+  ta.select();
+  try{ document.execCommand("copy"); toast("结果链接已复制"); }catch(e){ prompt("复制此链接分享给朋友：", url); }
+  ta.remove();
+}
+
+/* ===== 再测一次 ===== */
+document.getElementById("btnRetest").onclick=function(){
+  if(!curPwd){ showView("lock"); return; }
+  answers=[]; startQuiz();
+};
+
+/* ===== 好评有礼弹窗 ===== */
+var reviewModal=document.getElementById("reviewModal");
+document.getElementById("btnReview").onclick=function(){ reviewModal.classList.add("show"); };
+document.getElementById("reviewClose").onclick=function(){ reviewModal.classList.remove("show"); };
+document.getElementById("reviewGot").onclick=function(){ reviewModal.classList.remove("show"); toast("感谢支持，记得联系客服领返现"); };
+reviewModal.onclick=function(e){ if(e.target===reviewModal) reviewModal.classList.remove("show"); };
+
+/* ===== 解锁支付（MPay / FPS / 微信 / 支付宝） ===== */
+var payModal=document.getElementById("payModal");
+var payStep2=document.getElementById("payStep2");
+var payAwait=document.getElementById("payAwait");
+document.getElementById("payFeeVal").textContent = PAY.price + " " + PAY.currency;
+function renderPayMethods(){
+  var box=document.getElementById("payMethods"); box.innerHTML="";
+  PAY.methods.forEach(function(m){
+    var d=document.createElement("div");
+    d.className="pay-opt"+(m.id===selectedMethod.id?" sel":"");
+    d.innerHTML='<div class="po-ico">'+m.name.slice(0,2)+'</div>'+
+      '<div><div class="po-name">'+m.name+'</div><div class="po-desc">'+m.desc+'</div></div>'+
+      '<div class="po-radio"></div>';
+    d.onclick=function(){ selectedMethod=m; renderPayMethods(); renderPayInfo(); };
+    box.appendChild(d);
+  });
+}
+function renderPayInfo(){
+  var info=document.getElementById("payInfo");
+  var steps=document.getElementById("paySteps");
+  info.innerHTML='<div class="pi-row"><b>收款方式</b><span>'+selectedMethod.name+'</span></div>'+
+    '<div class="pi-row"><b>收款账号 / 码</b><span>'+selectedMethod.account+'</span></div>'+
+    '<div class="pi-row"><b>应付金额</b><span>'+PAY.price+' '+PAY.currency+'</span></div>';
+  steps.innerHTML='<b>付款步骤：</b><br>'+selectedMethod.steps.map(function(s,i){ return (i+1)+". "+s; }).join("<br>");
+}
+function openPay(){
+  if(!curResult){ toast("请先完成测试"); return; }
+  renderPayMethods(); renderPayInfo();
+  payStep2.style.display="block"; payAwait.style.display="none";
+  document.getElementById("payTxn").value="";
+  payModal.classList.add("show");
+}
+function closePay(){ payModal.classList.remove("show"); }
+
+/* 提交订单 → 写入 Supabase orders（待核销，管理员确认后 status=paid 即自动解锁） */
+function submitOrder(){
+  var txn=document.getElementById("payTxn").value.trim();
+  if(!txn){ toast("请填写付款后的交易编号"); return; }
+  var orderNo="ord-"+(Math.random().toString(36).slice(2,8)).toUpperCase();
+  var btn=document.getElementById("paySubmit");
+  btn.disabled=true; btn.textContent="正在提交…";
+  fetch(SUPABASE_URL+"/rest/v1/rpc/submit_order",{
+    method:"POST", headers:SUPABASE_HEADERS(), body:JSON.stringify({
+      p_order_no:orderNo, p_device_id:DEVICE_ID, p_pwd:curPwd||"", p_type:curResult.key,
+      p_method:selectedMethod.id, p_amount:PAY.price, p_currency:PAY.currency, p_txn_id:txn
+    })
+  }).then(function(r){ return r.json(); })
+  .then(function(){
+    document.getElementById("payOrderNo").textContent=orderNo;
+    payStep2.style.display="none"; payAwait.style.display="block";
+    btn.disabled=false; btn.textContent="我已付款 · 提交核销";
+  })
+  .catch(function(){
+    toast("提交失败，请稍后重试");
+    btn.disabled=false; btn.textContent="我已付款 · 提交核销";
+  });
+}
+document.getElementById("payClose").onclick=closePay;
+document.getElementById("payDone").onclick=function(){ closePay(); };
+document.getElementById("paySubmit").onclick=submitOrder;
+payModal.onclick=function(e){ if(e.target===payModal) closePay(); };
+
+/* ===== 密码验证 ===== */
+function refreshRemain(){
+  var el=document.getElementById("remainTip");
+  if(curPwd){ el.innerHTML = "当前密码已解锁 · <b>不限使用次数</b>"; }
+  else{ el.innerHTML=""; }
+}
+document.getElementById("btnUnlock").onclick=function(){
+  var pwd=document.getElementById("pwdInput").value.trim();
+  var err=document.getElementById("lockErr");
+  if(!pwd){ err.textContent="请输入体验密码"; return; }
+  verifyPassword(pwd).then(function(r){
+    if(r && r.ok){
+      err.textContent=""; curPwd=pwd; refreshRemain(); startQuiz();
+    } else if(r && r.reason==="invalid"){
+      err.textContent="密码不正确，请重新输入";
+    } else { err.textContent="网络异常，请稍后重试"; }
+  }).catch(function(){ err.textContent="网络异常，请检查连接后重试"; });
+};
+document.getElementById("pwdInput").addEventListener("keydown",function(e){
+  if(e.key==="Enter") document.getElementById("btnUnlock").click();
+});
+
+/* ===== 完成测试：结果 + 计次 ===== */
+function finishTest(){
+  var computed = computeResult();
+  renderResult(computed);
+}
+
+/* ===== 初始化：分享链接直达结果 ===== */
+(function init(){
+  var m=location.search.match(/[?&]r=([^&]+)/);
+  if(m && decodeAns(m[1])){
+    var arr=decodeAns(m[1]);
+    if(Array.isArray(arr) && arr.length===QUESTIONS.length){
+      answers=arr; var c=computeResult(); renderResult(c);
+      return;
+    }
+  }
+  refreshRemain();
+})();
+
+</script>
+</body>
+</html>
