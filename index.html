@@ -425,8 +425,8 @@ body::after{
         <label for="payTxn">付款后的交易编号 / 转账备注</label>
         <input id="payTxn" type="text" placeholder="填写交易编号，用于工作人员核销">
       </div>
-      <button id="paySubmit" class="btn btn-gold">我已付款 · 提交核销</button>
-      <p class="pay-note">支付后请保留交易记录，工作人员核对后即时解锁。<b>同一人格结果只需解锁一次</b>，换设备也可用同一密码找回。</p>
+      <button id="paySubmit" class="btn btn-gold">我已付款 · 立即解锁</button>
+      <p class="pay-note">提交后<b>即时自动解锁</b>完整报告，无需等待。请保留交易记录以备核验。<b>同一人格结果只需解锁一次</b>，换设备可用同一密码找回。</p>
     </div>
     <div id="payAwait" style="display:none" class="await-panel">
       <div class="a-ico">
@@ -458,8 +458,6 @@ var PAY = {
   methods: [
     { id:"mpay",  name:"MPay（澳门）", desc:"扫码或手机号转账，即时到账", account:"+853 66752916",
       steps:["打开 MPay，扫码或按手机号 +853 66752916 转账","输入 9.9 澳门元，备注「测试报告」","付款后把交易编号填到下方输入框"] },
-    { id:"fps",   name:"FPS 转数快（香港）", desc:"转数快即时转账，港银通用", account:"9123 4567",
-      steps:["打开银行 App，选 FPS 转数快","输入 9.9 港币，备注「测试报告」","付款后把交易编号填到下方输入框"] },
     { id:"wechat",name:"微信支付", desc:"扫码付款，快捷方便", account:"微信收款码", qrImage:"assets/pay-wechat.jpg",
       steps:["长按 / 微信扫码识别下方收款码付款 9.9 元","付款后把交易编号填到下方输入框"] },
     { id:"alipay",name:"支付宝", desc:"扫码付款，快捷方便", account:"支付宝收款码", qrImage:"assets/pay-alipay.jpg",
@@ -913,13 +911,15 @@ function submitOrder(){
     })
   }).then(function(r){ return r.json(); })
   .then(function(){
-    document.getElementById("payOrderNo").textContent=orderNo;
-    payStep2.style.display="none"; payAwait.style.display="block";
-    btn.disabled=false; btn.textContent="我已付款 · 提交核销";
+    // 乐观解锁：提交成功即自动开放完整报告（订单已记录，可后台抽查核销）
+    UNLOCK_CACHE[curResult.key]=true;
+    closePay();
+    document.getElementById("resultRoot").innerHTML = buildUnlockedHTML(curResult);
+    toast("完整报告已解锁，欢迎查看");
   })
   .catch(function(){
     toast("提交失败，请稍后重试");
-    btn.disabled=false; btn.textContent="我已付款 · 提交核销";
+    btn.disabled=false; btn.textContent="我已付款 · 立即解锁";
   });
 }
 document.getElementById("payClose").onclick=closePay;
