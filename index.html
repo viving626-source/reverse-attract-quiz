@@ -272,7 +272,7 @@ body::after{
     </div>
     <div id="lockErr" class="err"></div>
     <div id="remainTip" class="remain"></div>
-    <p class="hint">每个密码限测 3 次 · 分享链接查看结果不占用次数</p>
+    <p class="hint">输入正确密码即可开始 · 不限使用次数</p>
   </section>
 
   <!-- ===== 视图：答题页 ===== -->
@@ -477,12 +477,11 @@ function showView(name){
   window.scrollTo(0,0);
 }
 
-/* ===== Supabase 后端（密码验证 + 全局次数限制） ===== */
+/* ===== Supabase 后端（密码验证 · 不限次数） ===== */
 var curPwd = null;      // 当前已解锁密码
-var remainLeft = null;  // 当前密码剩余可测次数
 
-function consumeAttempt(pwd){
-  return fetch(SUPABASE_URL + "/rest/v1/rpc/consume_attempt", {
+function verifyPassword(pwd){
+  return fetch(SUPABASE_URL + "/rest/v1/rpc/verify_password", {
     method:"POST",
     headers:{"apikey":SUPABASE_ANON,"Authorization":"Bearer "+SUPABASE_ANON,"Content-Type":"application/json"},
     body: JSON.stringify({p:pwd})
@@ -636,14 +635,7 @@ function shareFallback(url){
 /* ===== 再测一次 ===== */
 document.getElementById("btnRetest").onclick=function(){
   if(!curPwd){ showView("lock"); return; }
-  consumeAttempt(curPwd).then(function(r){
-    if(r && r.ok){
-      remainLeft = r.remaining; refreshRemain(); answers=[]; startQuiz();
-    } else if(r && r.reason==="exhausted"){
-      toast("本次密码次数已用完，请更换密码");
-      setTimeout(function(){ showView("lock"); refreshRemain(); },900);
-    } else { toast("网络异常，请稍后重试"); }
-  }).catch(function(){ toast("网络异常，请稍后重试"); });
+  answers=[]; startQuiz();
 };
 
 /* ===== 好评有礼弹窗 ===== */
@@ -656,21 +648,18 @@ reviewModal.onclick=function(e){ if(e.target===reviewModal) reviewModal.classLis
 /* ===== 密码验证 ===== */
 function refreshRemain(){
   var el=document.getElementById("remainTip");
-  if(curPwd && remainLeft!=null){ el.innerHTML = "当前密码剩余可测 <b>"+remainLeft+"</b> 次"; }
-  else if(curPwd){ el.innerHTML = "当前密码已解锁"; }
+  if(curPwd){ el.innerHTML = "当前密码已解锁 · <b>不限使用次数</b>"; }
   else{ el.innerHTML=""; }
 }
 document.getElementById("btnUnlock").onclick=function(){
   var pwd=document.getElementById("pwdInput").value.trim();
   var err=document.getElementById("lockErr");
   if(!pwd){ err.textContent="请输入体验密码"; return; }
-  consumeAttempt(pwd).then(function(r){
+  verifyPassword(pwd).then(function(r){
     if(r && r.ok){
-      err.textContent=""; curPwd=pwd; remainLeft=r.remaining; refreshRemain(); startQuiz();
+      err.textContent=""; curPwd=pwd; refreshRemain(); startQuiz();
     } else if(r && r.reason==="invalid"){
       err.textContent="密码不正确，请重新输入";
-    } else if(r && r.reason==="exhausted"){
-      err.textContent="该密码测试次数已用完，请更换密码";
     } else { err.textContent="网络异常，请稍后重试"; }
   }).catch(function(){ err.textContent="网络异常，请检查连接后重试"; });
 };
